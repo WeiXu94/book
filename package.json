@@ -1,0 +1,22 @@
+{
+  "name": "book-reader",
+  "version": "1.0.0",
+  "description": "EPUB to GitHub Pages book reader with Flexoki light theme",
+  "type": "module",
+  "scripts": {
+    "parse": "tsx scripts/parse.ts",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "adm-zip": "^0.5.10",
+    "cheerio": "^1.0.0",
+    "fast-xml-parser": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.5",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
