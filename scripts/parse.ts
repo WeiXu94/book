@@ -57,10 +57,17 @@ function saveState(state: BookState): void {
 function rebuildIndex(state: BookState): void {
   const books: IndexBook[] = Object.values(state.books).map((book) => {
     const pages = state.pages.filter((p) => p.bookFilename === book.filename);
-    return { title: book.title, author: book.author, pages };
+    return {
+      title: book.title,
+      author: book.author,
+      finished: book.finished ?? false,
+      totalChapters: book.totalChapters ?? 0,
+      pages,
+    };
   });
 
-  const html = generateIndexPage(books);
+  const latestPage = state.pages.length > 0 ? state.pages[state.pages.length - 1] : undefined;
+  const html = generateIndexPage(books, latestPage);
   fs.writeFileSync(path.join(DOCS_DIR, 'index.html'), html, 'utf8');
   console.log('  ↳ Rebuilt docs/index.html');
 }
@@ -135,6 +142,8 @@ async function main(): Promise<void> {
         title: epub.title,
         author: epub.author,
         filename: epubFile,
+        totalChapters: epub.chapters.length,
+        finished: false,
         chapters: [],
       } satisfies BookEntry;
       saveState(state);
@@ -143,6 +152,13 @@ async function main(): Promise<void> {
     }
 
     const bookState = state.books[epubFile]!;
+
+    // Skip books already marked finished
+    if (bookState.finished) {
+      console.log(`📦  "${epub.title}" is archived (all chapters read).`);
+      continue;
+    }
+
     const parsedIds = new Set(bookState.chapters.map((c) => c.id));
 
     // Find first unparsed chapter
@@ -319,11 +335,22 @@ async function main(): Promise<void> {
     };
     bookState.chapters.push(chapterEntry);
 
+    // Check if the book is now complete
+    const contentChapters = bookState.chapters.filter((c) => c.parts.length > 0);
+    if (bookState.totalChapters > 0 && contentChapters.length >= bookState.totalChapters) {
+      bookState.finished = true;
+      console.log(`\n🏁  Book complete — "${epub.title}" moved to archive.`);
+    }
+
     saveState(state);
     rebuildIndex(state);
 
     console.log(`\n✅  Done! "${nextChapter.title}" is ready in docs/`);
-    console.log(`    Chapters parsed so far: ${bookState.chapters.length} / ${epub.chapters.length}`);
+    const total = bookState.totalChapters || epub.chapters.length;
+    console.log(`    Chapters parsed so far: ${contentChapters.length} / ${total}`);
+    if (!bookState.finished) {
+      console.log(`    ${total - contentChapters.length} chapter(s) remaining.`);
+    }
     console.log(`\n    Next step: commit the docs/ changes and push to GitHub.`);
 
     return; // One chapter per run

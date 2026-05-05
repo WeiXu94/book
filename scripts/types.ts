@@ -8,6 +8,8 @@ export interface BookEntry {
   title: string;
   author: string;
   filename: string;
+  totalChapters: number;
+  finished: boolean;
   chapters: ChapterEntry[];
 }
 
