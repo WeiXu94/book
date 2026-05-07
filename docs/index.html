@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>书架</title>
+  <style>
+    :root {
+      --bg:    #FFFCF0;
+      --bg-2:  #F2F0E5;
+      --ui:    #E6E4D9;
+      --tx-2:  #6F6E69;
+      --tx:    #100F0F;
+      --blue:  #205EA6;
+      --cyan:  #24837B;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--tx);
+      font-family: system-ui, 'PingFang SC', sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .site-header {
+      background: var(--bg-2); border-bottom: 1px solid var(--ui);
+      padding: 1.25rem 1.5rem;
+    }
+    .site-title { font-size: 1.5rem; font-weight: 700; }
+    .main {
+      max-width: 80ch; margin: 0 auto; padding: 4rem 1.5rem;
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .empty-state { text-align: center; color: var(--tx-2); line-height: 2.2; }
+    .empty-state h2 { font-size: 1.1rem; margin-bottom: .5rem; color: var(--tx); }
+    code { background: var(--ui); padding: .15em .4em; border-radius: 3px; font-family: monospace; font-size: .9em; }
+    .site-footer {
+      border-top: 1px solid var(--ui); background: var(--bg-2);
+      padding: 1rem 1.5rem; text-align: center;
+      font-size: .8rem; color: var(--tx-2);
+    }
+    .site-footer a { color: var(--tx-2); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div style="max-width:80ch;margin:0 auto">
+    <h1 class="site-title">📚 书架</h1>
+  </div>
+</header>
+
+<main class="main">
+  <div class="empty-state">
+    <h2>还没有任何章节</h2>
+    <p>把 <code>.epub</code> 文件放入 <code>books/</code> 目录</p>
+    <p>然后运行 <code>npm run parse</code></p>
+    <p>每次运行会解析下一个未读章节并更新此页面</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>由 <a href="https://github.com/weixu94/book">book-reader</a> 生成</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+
+# EPUB source files (copyright — keep local only)
+books/
+
+# Local env with API key
+.env
+.env.local
